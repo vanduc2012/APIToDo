@@ -1,0 +1,211 @@
+﻿
+<!doctype html>
+<html>
+<head>
+    <title>API</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script type='text/javascript' src="../Scripts/knockout-3.5.0.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>-->
+    <script src="../Scripts/jquery-3.3.1.js"></script>
+    <script src="../Scripts/knockout.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" />
+    <script src="Scripts/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <center><h4>Show API with knockoutJs</h4></center>
+    <br />
+    <hr />
+    <div>
+        <div class="row">
+            <div class="col-md-2">
+                <button id="Add" type="reset" class="btn btn-sm btn-primary">Add New Student</button>
+            </div>
+            <div class="col-md-10">
+                <button style="margin:5px; float:right;" id="showSearch" class="btn btn-info">Search</button>
+                <form id="showFormSearch">
+                    <div style="float:left; text-align:center;" class="row">
+                        <label class="col-md-2 control-label" style="flex:auto; top: 7px; right: 2px;">Name:</label>
+                        <div class="col-md-4">
+                            <input class="form-control" autocomplete="on" id="searchforname" placeholder="Search for name..." />
+                        </div>
+                        <label class="col-md-2 control-label" style="flex:auto; top: 7px; right: 2px;">Address:</label>
+                        <div class="col-md-4">
+                            <input class="form-control" autocomplete="on" id="searchforaddress" placeholder="Search for address..." />
+                        </div>
+                        <label class="col-md-2 control-label" style="flex:auto; top: 7px; right: 2px;">Birthday:</label>
+                        <div class="col-md-4">
+                            <input type="date" class="form-control"  id="searchforbirthday" placeholder="Search for birthday..." />
+                        </div>
+
+                    </div>
+                    <!--<button type="submit" class="btn btn-info">Search</button>-->
+                </form>
+            </div>
+        </div>
+        
+        
+    </div>
+    <br />
+  
+    <div style=" position:fixed; top: 0px; width: 50%;  padding:0px; margin: 0px 300px; display:block; opacity: 1 ;z-index:999; background-color:cadetblue; color: black;">
+        <form id="AddST" class="form-horizontal" method="post" >
+            <div class="form-group" data-bind="with: newStudent">
+                <label hidden="hidden" class="col-md-4 control-label" for="id">Id</label>
+                <div hidden="hidden" class="col-md-12">
+                    <input type="text" id="id" class="form-control"  placeholder="Id" data-bind="value:id" />
+                </div>
+                <label class="col-md-4 control-label" for="codeView">Code View</label>
+                <div class="col-md-12">
+                    <input type="number" id="codeview" class="form-control" maxlength="8" placeholder="Code View" onchange="checkValidation()" required="" data-bind="value: codeView" />
+                    <span id="errorCodeView" style="position:absolute; right:5px; background-color:sandybrown;color:blue;border:solid 1px; border-radius:5px;"></span>
+                    <span id="errorLoop" style="background-color:sandybrown;">Codeview is existed.</span>
+                </div>
+
+                <label class="col-md-4 control-label" for="name">Name</label>
+                <div class="col-md-12">
+                    <input maxlength="50" min="5" type="text" id="name" class="form-control" placeholder="Name" data-bind="value:name" />
+                    <span id="errorName" style="position:absolute; right:5px; background-color:sandybrown;color:blue;border:solid 1px; border-radius:5px;">Please insert name with max length is 30.</span>
+                </div>
+
+                <label class="col-md-4 control-label" for="address">Address</label>
+                <div class="col-md-12">
+                    <input maxlength="255" type="text" id="address" class="form-control" placeholder="Address" data-bind="value:address" />
+                </div>
+
+                <label class="col-md-4 control-label" for="birthDay">Date of birth</label>
+                <div class="col-md-12">
+                    <input type="date" id="birthDay" class="form-control" placeholder="Date of birth" data-bind="value: birthDay" />
+                    <!--<span id="errorDOB" style="position:absolute; right:5px; background-color:sandybrown;color:blue;border:solid 1px; border-radius:5px;">Please insert birthday.</span>-->
+                </div>
+                <div class="col-md-12">
+                    <input type="datetime-local" id="birthDay_UD" class="form-control" placeholder="Date of birth" data-bind="value: birthDay" />
+                    <!--<span id="errorDOB_UD" style="position:absolute; right:5px; background-color:sandybrown;color:blue;border:solid 1px; border-radius:5px;">Please insert birth day.</span>-->
+                </div>
+                <label class="col-md-4 control-label" for="phoneNumber">Genre</label>
+                <div class="col-md-12">
+                    <select id="genre" class="form-control" data-bind="value:genre">
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                </div>
+                <label class="col-md-4 control-label" for="phoneNumber">phoneNumber</label>
+                <div class="col-md-12">
+                    <input type="number" maxlength="11" title="Please insert format of number and range 11 numbers" id="phoneNumber" class="form-control" placeholder="phoneNumber" data-bind="value:phoneNumber" />
+                </div>
+            </div>
+            <label class="col-md-4 control-label" for="ClassesId">Class</label>
+            <div class="col-md-12">
+                <select class="form-control" id="ClassesId" data-bind="options:listClass, optionsText: 'name',optionsValue: 'id', value:newStudent.classes"></select>
+            </div>
+            <br />
+            <center>
+                <button id="actionUpdate" class="btn btn-danger btn-sm-block" data-bind="click:updateStudent">Update</button>
+                <button id="actionAdd" class="btn btn-success btn-sm-block" data-bind="click:AddStudent">Submit</button>
+                <button id="actionCancel" type="reset" class="btn btn-warning btn-sm-block ">Cancel</button>
+            </center>
+        </form>
+    </div>
+
+    <!--<div id="box-update" style=" position:fixed; top: 0px; width: 50%;  padding:0px; margin: 0px 300px; display:table; align-items:center; justify-content: center; opacity: 0.9 ;z-index:999; background-color:cadetblue; color: blue;">
+        <center><button id="UpdateLB" type="reset" class="btn btn-sm btn-primary">Update Student</button> </center>
+        <form id="UpdateForm" class="form-horizontal" method="put" data-bind="submit:updateStudent">
+            <div class="form-group">
+                <label class="col-md-4 control-label" hidden="hidden" for="id">Id</label>
+                <div class="col-md-12 col-sm-12">
+                    <input type="number" hidden="hidden" disabled="disabled" id="id-UD" class="form-control" data-bind="value: id" />
+                </div>
+                <label class="col-md-4 control-label" for="codeView">Code View</label>
+                <div class="col-md-12 col-sm-12">
+                    <input type="number" disabled="disabled" id="codeview-UD" class="form-control" maxlength="7" title="Please insert format of number." placeholder="Code View" required="" data-bind="value: codeView" />
+                </div>
+
+                <label class="col-md-4 control-label" for="name">Name</label>
+                <div class="col-md-12 col-sm-12">
+                    <input maxlength="50" min="5" type="text" id="name-UD" class="form-control" placeholder="Name" data-bind="value:name" />
+                </div>
+
+                <label class="col-md-4 control-label" for="address">Address</label>
+                <div class="col-md-12 col-sm-12">
+                    <input maxlength="255" type="text" id="address-UD" class="form-control" placeholder="Address" data-bind="value:address" />
+                </div>
+
+                <label class="col-md-4 control-label" for="birthDay">Date of birth</label>
+                <div class="col-md-12 col-sm-12">
+                    <input type="datetime-local" id="birthDay-UD" class="form-control" placeholder="Date of birth" data-bind="value:birthDay" />
+                </div>
+
+                <label class="col-md-4 control-label" for="phoneNumber">phoneNumber</label>
+                <div class="col-md-12 col-sm-12">
+                    <input type="number" maxlength="11" title="Please insert format of number and range 11 numbers" id="phoneNumber-UD" class="form-control" placeholder="phoneNumber" data-bind="value:phoneNumber" />
+                </div>
+            </div>
+            <label class="col-md-4 control-label" for="idClasses">Class</label>
+            <div class="col-md-12 col-sm-12">
+                <select class="form-control" id="idClasses-UD" data-bind="options:listClass, optionsText: 'name', optionsValue: 'id', value:newStudent.classes"></select>
+            </div>
+            <br />
+            <center>
+                <button id="actionUpdate" class="btn btn-danger btn-sm-block" type="submit">Submit</button>
+                <button id="actionCancelUD" type="reset" class="btn btn-warning btn-sm-block ">Cancel</button>
+            </center>
+        </form>
+    </div>-->
+
+
+    <table style="flex:auto; top:5px;" id="dataTB" class="table table-striped table-bordered table-condensed table-reponsive">
+        <thead>
+            <tr style="text-align: center;">
+                <th hidden>Id</th>
+                <th>CodeView</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Date Of Birth</th>
+                <th>phoneNumber</th>
+                <th>Genre</th>
+                <th>Class</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: listStudents">
+            <tr id="item">
+                <td hidden data-bind="text: id"></td>
+                <td data-bind="text: codeView"></td>
+                <td data-bind="text: name"></td>
+                <td data-bind="text: address"></td>
+                <td data-bind="text: birthDay"></td>
+                <td data-bind="text: phoneNumber"></td>
+                <td data-bind="text: genre"></td>
+                <td data-bind="text: classesId"></td>
+                <td style="float:right">
+                    <input type="button" id="update" class="btn btn-primary btn-sm" value="Update" data-bind="click: $parent.GetDataToTB" />
+                    <input type="button" id="hide" class="btn btn-warning btn-sm" value="Inactive" data-bind="click: $parent.HideStudent" />
+                    <input type="button" id="restore" class="btn btn-success btn-sm" value="Restore" data-bind="click: $parent.RestoreStudent" />
+                    <input type="button" id="delete" class="btn btn-danger btn-sm" value="Delete" data-bind="click: $parent.DeleteStudent" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br />
+
+    <div class="form-control" style="position:fixed; bottom:0px; background-color:darkgrey">
+        <button type="button" class="btn btn-sm" style="background-color:azure; padding: 0px 2px;" value="AllStudents" id="allstudent" data-bind="click: getAllStudents" >All Students</button> &nbsp;
+        <button type="button" class="btn btn-sm" style="background-color:azure;  padding: 0px 2px;" value="StudentsACtive" id="studentactive" data-bind="click: getAllStudentsCheck" > Students active</button> &nbsp;
+        <button type="button" class="btn btn-sm" style="background-color:azure;  padding: 0px 2px;" value="StudentsDeleted" id="studentdeleted" data-bind="click: getAllStudentsDeleted" > Students inactive</button>
+
+    </div>
+
+
+    <br />
+</body>
+</html>
+

@@ -1,0 +1,16 @@
+D:\BHSoft_internship\API_TODO\API_TODO\bin\Debug\netcoreapp2.2\API_TODO.deps.json
+D:\BHSoft_internship\API_TODO\API_TODO\bin\Debug\netcoreapp2.2\API_TODO.runtimeconfig.json
+D:\BHSoft_internship\API_TODO\API_TODO\bin\Debug\netcoreapp2.2\API_TODO.runtimeconfig.dev.json
+D:\BHSoft_internship\API_TODO\API_TODO\bin\Debug\netcoreapp2.2\API_TODO.dll
+D:\BHSoft_internship\API_TODO\API_TODO\bin\Debug\netcoreapp2.2\API_TODO.pdb
+D:\BHSoft_internship\API_TODO\API_TODO\bin\Debug\netcoreapp2.2\API_TODO.Views.dll
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.csproj.CoreCompileInputs.cache
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.RazorAssemblyInfo.cache
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.RazorAssemblyInfo.cs
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.AssemblyInfoInputs.cache
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.AssemblyInfo.cs
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.RazorTargetAssemblyInfo.cache
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.dll
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.pdb
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.csproj.CopyComplete
+D:\BHSoft_internship\API_TODO\API_TODO\obj\Debug\netcoreapp2.2\API_TODO.csprojAssemblyReference.cache
