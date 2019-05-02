@@ -145,7 +145,7 @@ namespace API_TODO.Controllers
                             }
                         }
                     }
-                    return await _context.StudentsModel.OrderBy(x => x.Name).Skip(0).Take(5)
+                    return await _context.StudentsModel.OrderBy(x => x.Name)
                     .ToListAsync();
                 }
                 

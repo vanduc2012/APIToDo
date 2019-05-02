@@ -13189,11 +13189,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\BHSoft_internship\\API_TODO\\API_TODO\\API_TODO.csproj",
+      "projectUniqueName": "D:\\BHSoft_internship\\Todo\\APIToDo\\API_TODO\\API_TODO.csproj",
       "projectName": "API_TODO",
-      "projectPath": "D:\\BHSoft_internship\\API_TODO\\API_TODO\\API_TODO.csproj",
+      "projectPath": "D:\\BHSoft_internship\\Todo\\APIToDo\\API_TODO\\API_TODO.csproj",
       "packagesPath": "C:\\Users\\vandu\\.nuget\\packages\\",
-      "outputPath": "D:\\BHSoft_internship\\API_TODO\\API_TODO\\obj\\",
+      "outputPath": "D:\\BHSoft_internship\\Todo\\APIToDo\\API_TODO\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

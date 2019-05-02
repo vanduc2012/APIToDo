@@ -372,18 +372,14 @@ $(document).ready(function () {
         $("#Add").show();
         $("#UpdateForm").hide();
     });
-    function searching() {
-        var viewModel = new ViewModels();
-        $("#searchforname").change(function () {
-            viewModel.searchStudent();
-        });
-        $("#searchforaddress").change(function () {
-            viewModel.searchStudent();
-        });
-        $("#searchforbirthday").change(function () {
-            viewModel.searchStudent();
-        });
-    }
-    searching();
+    $("#searchforname").change(function () {
+        viewModel.searchStudent();
+    });
+    $("#searchforaddress").change(function () {
+        viewModel.searchStudent();
+    });
+    $("#searchforbirthday").change(function () {
+        viewModel.searchStudent();
+    });
     
 });
