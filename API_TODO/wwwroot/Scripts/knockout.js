@@ -32,11 +32,7 @@ var ViewModels = function () {
             self.error(errorThrown);
         });
     }
-    function myDate() {
-        var d = new Date();
-        document.getElementById("birthDay").value = d.getFullYear();
-    }
-    myDate();
+    
     // clear field
     function clearFields() {
         $("#codeview").val("");
@@ -381,5 +377,4 @@ $(document).ready(function () {
     $("#searchforbirthday").change(function () {
         viewModel.searchStudent();
     });
-    
 });
