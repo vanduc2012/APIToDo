@@ -35,131 +35,131 @@ namespace API_TODO.Controllers
             if (all == 1) // search for active or remove
             {
                 // search with all params
-                if (!String.IsNullOrEmpty(name) && !String.IsNullOrEmpty(address) && !String.IsNullOrEmpty(birthDay))
-                {
-                    //return with all params
-                    return await _context.StudentsModel.Where(x => x.Name.Contains(name)
-                                && x.IsDelete == isDelete
-                                && x.Address.Contains(address)
-                                && x.BirthDay == DateTime.Parse(birthDay))
-                               .OrderByDescending(x => x.Name)
-                                .ToListAsync();
-                }
-                else
-                {
-                    //search with params: address and name
-                    if (!String.IsNullOrEmpty(name))
-                    {
-                        if (!String.IsNullOrEmpty(address))
-                        {
-                            return await _context.StudentsModel.Where(x => x.Name.Contains(name) && x.Address.Contains(address) && x.IsDelete == isDelete).ToListAsync();
-                        }
-                        else    // address = null
-                        {
-                            if (!String.IsNullOrEmpty(birthDay))
-                            {
-                                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.Name.Contains(name) && x.IsDelete == isDelete).ToListAsync();
-                            }
-                        }
-                        return await _context.StudentsModel.Where(x => x.Name.Contains(name) && x.IsDelete == isDelete).ToListAsync();
-                    }
-                    else // name = null
-                    {
-                        //search with params: address and birthday
-                        if (!String.IsNullOrEmpty(address))
-                        {
-                            if (!String.IsNullOrEmpty(birthDay))
-                            {
-                                //return list with params: address and birthday
-                                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.Address.Contains(address) && x.IsDelete == isDelete).ToListAsync();
-                            }
-                            //return list with params: address
-                            return await _context.StudentsModel.Where(x => x.Address.Contains(address) && x.IsDelete == isDelete).ToListAsync();
-                        }
+                //if (!String.IsNullOrEmpty(name) && !String.IsNullOrEmpty(address) && !String.IsNullOrEmpty(birthDay))
+                //{
+                //    //return with all params
+                //    return await _context.StudentsModel.Where(x => x.Name.Contains(name)
+                //                && x.IsDelete == isDelete
+                //                && x.Address.Contains(address)
+                //                && x.BirthDay == DateTime.Parse(birthDay))
+                //               .OrderByDescending(x => x.Name)
+                //                .ToListAsync();
+                //}
+                //else
+                //{
+                //    //search with params: address and name
+                //    if (!String.IsNullOrEmpty(name))
+                //    {
+                //        if (!String.IsNullOrEmpty(address))
+                //        {
+                //            return await _context.StudentsModel.Where(x => x.Name.Contains(name) && x.Address.Contains(address) && x.IsDelete == isDelete).ToListAsync();
+                //        }
+                //        else    // address = null
+                //        {
+                //            if (!String.IsNullOrEmpty(birthDay))
+                //            {
+                //                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.Name.Contains(name) && x.IsDelete == isDelete).ToListAsync();
+                //            }
+                //        }
+                //        return await _context.StudentsModel.Where(x => x.Name.Contains(name) && x.IsDelete == isDelete).ToListAsync();
+                //    }
+                //    else // name = null
+                //    {
+                //        //search with params: address and birthday
+                //        if (!String.IsNullOrEmpty(address))
+                //        {
+                //            if (!String.IsNullOrEmpty(birthDay))
+                //            {
+                //                //return list with params: address and birthday
+                //                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.Address.Contains(address) && x.IsDelete == isDelete).ToListAsync();
+                //            }
+                //            //return list with params: address
+                //            return await _context.StudentsModel.Where(x => x.Address.Contains(address) && x.IsDelete == isDelete).ToListAsync();
+                //        }
 
-                        else  //address = null
-                        {
-                            if (!String.IsNullOrEmpty(birthDay))
-                            {
-                                //return list student with params birthday
-                                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.IsDelete == isDelete).ToListAsync();
-                            }
-                        }
-                    }
-                }
+                //        else  //address = null
+                //        {
+                //            if (!String.IsNullOrEmpty(birthDay))
+                //            {
+                //                //return list student with params birthday
+                //                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.IsDelete == isDelete).ToListAsync();
+                //            }
+                //        }
+                //    }
+                //}
                 return await _context.StudentsModel.Where(x => x.IsDelete == isDelete).OrderBy(x => x.Name)
                 .ToListAsync();
             }
-            else
-            if (all == 2) // search for all
-            {
-                // search with all params
-                if (!String.IsNullOrEmpty(name) && !String.IsNullOrEmpty(address) && !String.IsNullOrEmpty(birthDay))
-                {
-                    //return with all params
-                    return await _context.StudentsModel.Where(x => x.Name.Contains(name)
-                                && x.Address.Contains(address)
-                                && x.BirthDay == DateTime.Parse(birthDay))
-                               .OrderByDescending(x => x.Name)
-                                .ToListAsync();
-                }
-                else
-                {
-                    //search with params: address and name
-                    if (!String.IsNullOrEmpty(name))
-                    {
-                        if (!String.IsNullOrEmpty(address))
-                        {
-                            return await _context.StudentsModel.Where(x => x.Name.Contains(name) && x.Address.Contains(address)).ToListAsync();
-                        }
-                        // address = null
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(birthDay))
-                            {
-                                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.Name.Contains(name)).ToListAsync();
-                            }
-                        }
-                        return await _context.StudentsModel.Where(x => x.Name.Contains(name)).ToListAsync();
-                    }
-                    // name = null
-                    else
-                    {
-                        //search with params: address and birthday
-                        if (!String.IsNullOrEmpty(address))
-                        {
-                            if (!String.IsNullOrEmpty(birthDay))
-                            {
-                                //return list with params: address and birthday
-                                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.Address.Contains(address)).ToListAsync();
-                            }
-                            //return list with params: address
-                            return await _context.StudentsModel.Where(x => x.Address.Contains(address)).ToListAsync();
-                        }
-                        //address = null
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(birthDay))
-                            {
-                                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay)).ToListAsync();
-                            }
-                        }
-                    }
-                    return await _context.StudentsModel.OrderBy(x => x.Name)
-                    .ToListAsync();
-                }
-                
-            }
+            //else
+            //if (all == 2) // search for all
+            //{
+            //    //// search with all params
+            //    //if (!String.IsNullOrEmpty(name) && !String.IsNullOrEmpty(address) && !String.IsNullOrEmpty(birthDay))
+            //    //{
+            //    //    //return with all params
+            //    //    return await _context.StudentsModel.Where(x => x.Name.Contains(name)
+            //    //                && x.Address.Contains(address)
+            //    //                && x.BirthDay == DateTime.Parse(birthDay))
+            //    //               .OrderByDescending(x => x.Name)
+            //    //                .ToListAsync();
+            //    //}
+            //    //else
+            //    //{
+            //    //    //search with params: address and name
+            //    //    if (!String.IsNullOrEmpty(name))
+            //    //    {
+            //    //        if (!String.IsNullOrEmpty(address))
+            //    //        {
+            //    //            return await _context.StudentsModel.Where(x => x.Name.Contains(name) && x.Address.Contains(address)).ToListAsync();
+            //    //        }
+            //    //        // address = null
+            //    //        else
+            //    //        {
+            //    //            if (!String.IsNullOrEmpty(birthDay))
+            //    //            {
+            //    //                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.Name.Contains(name)).ToListAsync();
+            //    //            }
+            //    //        }
+            //    //        return await _context.StudentsModel.Where(x => x.Name.Contains(name)).ToListAsync();
+            //    //    }
+            //    //    // name = null
+            //    //    else
+            //    //    {
+            //    //        //search with params: address and birthday
+            //    //        if (!String.IsNullOrEmpty(address))
+            //    //        {
+            //    //            if (!String.IsNullOrEmpty(birthDay))
+            //    //            {
+            //    //                //return list with params: address and birthday
+            //    //                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay) && x.Address.Contains(address)).ToListAsync();
+            //    //            }
+            //    //            //return list with params: address
+            //    //            return await _context.StudentsModel.Where(x => x.Address.Contains(address)).ToListAsync();
+            //    //        }
+            //    //        //address = null
+            //    //        else
+            //    //        {
+            //    //            if (!String.IsNullOrEmpty(birthDay))
+            //    //            {
+            //    //                return await _context.StudentsModel.Where(x => x.BirthDay == DateTime.Parse(birthDay)).ToListAsync();
+            //    //            }
+            //    //        }
+            //    //    }
+            //        return await _context.StudentsModel.OrderBy(x => x.Name)
+            //        .ToListAsync();
+            //    }
+            return await _context.StudentsModel.ToListAsync();
+        }
 
             // show for all
-            return await _context.StudentsModel.ToListAsync();
+            
 
             #endregion
             #region Paging
 
             #endregion
-
-        }
+        
+        
 
         // GET: api/Students/5
         [HttpGet("{id}")]

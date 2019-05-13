@@ -33,44 +33,15 @@ var ViewModels = function () {
         });
     }
     
-    // clear field
-    function clearFields() {
-        $("#codeview").val("");
-        $("#name").val("");
-        $("#address").val("");
-        $("#phoneNumber").val("");
-        $("#dateOfBirtd").val("");
-        $("#AddST").hide();
-    }
 
-    // check validation 
-    var checkValidate = function () {
-        if ($("#codeview").val() === "" || $("#codeview").val().length > 8) {
-            $("#errorCodeView").show(500);
-            
-        }
-        if ($("#birthDay").value === null) {
-            $("#errorDOB").show(500);
-            
-        }
-        if ($("#birthDay_UD").value === null) {
-            $("#errorDOB_UD").show(500);
 
-        }
-        if ($("#name").val() === "" || $("#codeview").val().length > 30) {
-            $("#errorName").show(500);
-           
-        }
-        return false;
-    };
+  
     //filter
     var flag = "active";
     //get list all students
     self.getAllStudents = function () {
         flag = "all";
-        ajaxHelper(studentsUri + "?all=2" + "&name=" + $("#searchforname").val()
-            + "&address=" + $("#searchforaddress").val() +
-            "&birthDay=" + $("#searchforbirthday").val(), 'GET').done(function (data) {
+        ajaxHelper(studentsUri + "?all=2" , 'GET').done(function (data) {
                 self.listStudents(data);
             });
         
@@ -79,21 +50,19 @@ var ViewModels = function () {
     //get list student active
     self.getAllStudentsCheck = function () {
         flag = "active";
-        ajaxHelper(studentsUri + "?all=1&isDelete=false" + "&name=" + $("#searchforname").val() +
-            "&address=" + $("#searchforaddress").val() +
-            "&birthDay=" + $("#searchforbirthday").val(), 'GET')
+        ajaxHelper(studentsUri + "?all=1&isDelete=false", 'GET')
             .done(function (data) {
 
                 self.listStudents(data);
             });
        
     };
+
+    //self.getAllStudentsCheck();
     self.getAllStudentsDeleted = function () {
         flag = "removed";
         ajaxHelper(studentsUri + "?all=1&isDelete=true"
-            + "&name=" + $("#searchforname").val()
-            + "&address=" + $("#searchforaddress").val()
-            + "&birthDay=" + $("#searchforbirthday").val(), 'GET')
+            , 'GET')
             .done(function (data) {
 
                 self.listStudents(data);
@@ -106,27 +75,19 @@ var ViewModels = function () {
     //seacr for removed
     self.searchStudent = function () {
         if (flag === "all") {
-            ajaxHelper(studentsUri + "?all=2" + "&name=" + $("#searchforname").val()
-                + "&address=" + $("#searchforaddress").val() +
-                "&birthDay=" + $("#searchforbirthday").val(), 'GET').done(function (data) {
+            ajaxHelper(studentsUri + "?all=2" , 'GET').done(function (data) {
                 self.listStudents(data);
             });
         }
         else {
             if (flag === "active") {
-                ajaxHelper(studentsUri + "?all=1&isDelete=false" + "&name=" + $("#searchforname").val() +
-                    "&address=" + $("#searchforaddress").val() +
-                    "&birthDay=" + $("#searchforbirthday").val(), 'GET')
-                    .done(function (data) {
+                ajaxHelper(studentsUri + "?all=11&isDelete=false", 'GET').done(function (data) {
 
                     self.listStudents(data);
                 });
             }
             else {
-                ajaxHelper(studentsUri + "?all=1&isDelete=true"
-                    + "&name=" + $("#searchforname").val()
-                    + "&address=" + $("#searchforaddress").val()
-                    + "&birthDay=" + $("#searchforbirthday").val(), 'GET')
+                ajaxHelper(studentsUri + "?all=1&isDelete=true", 'GET')
                     .done(function (data) {
 
                     self.listStudents(data);
@@ -148,15 +109,15 @@ var ViewModels = function () {
         classes: ko.observable(),
         isDelete: false
     };
-
+   
     // add student
     self.AddStudent = function AddStudent(formElement) {
-        checkValidate();
+       
         var student = {
             codeView: self.newStudent.codeView(),
             name: self.newStudent.name(),
             address: self.newStudent.address(),
-            birthDay: self.newStudent.birthDay().getDate,
+            birthDay: self.newStudent.birthDay(),
             phoneNumber: self.newStudent.phoneNumber(),
             genre: self.newStudent.genre(),
             classesId: self.newStudent.classes(),
@@ -165,39 +126,38 @@ var ViewModels = function () {
         ajaxHelper(studentsUri, 'POST', student).done(function (item) {
             self.listStudents.push(item);
             alert("Success");
-            clearFields();
             self.getAllStudentsCheck();
         });
 
     };
+    // get data to text box when update
+    self.GetDataToTB = function (item) {
+        self.newStudent.id(item.id);
+        self.newStudent.codeView(item.codeView);
+        self.newStudent.name(item.name);
+        self.newStudent.address(item.address);
+        self.newStudent.birthDay(item.birthDay);
+        self.newStudent.phoneNumber(item.phoneNumber);
+        self.newStudent.genre(item.genre);
+        self.newStudent.classes(item.classesId);
+
+    };
     //update student
     self.updateStudent = function () {
-        var oldStudent = {
-            id: $("#id").val(),
-            codeView: $("#codeview").val(),
-            name: $("#name").val(),
-            address: $("#address").val(),
-            birthDay: $("#birthDay_UD").val(),
-            phoneNumber: $("#phoneNumber").val(),
-            genre: $("#genre").val(),
-            classesId: self.newStudent.classes()
+      
+        var student = {
+            id: self.newStudent.id(),
+            codeView: self.newStudent.codeView(),
+            name: self.newStudent.name(),
+            address: self.newStudent.address(),
+            birthDay: self.newStudent.birthDay(),
+            phoneNumber: self.newStudent.phoneNumber(),
+            genre: self.newStudent.genre(),
+            classesId: self.newStudent.classes(),
+            isDelete: self.newStudent.isDelete
         };
-        //var student = {
-        //    id: self.newStudent.id(),
-        //    codeView: self.newStudent.codeView(),
-        //    name: self.newStudent.name(),
-        //    address: self.newStudent.address(),
-        //    birthDay: self.newStudent.birthDay(),
-        //    phoneNumber: self.newStudent.phoneNumber(),
-        //    genre: self.newStudent.genre(),
-        //    classesId: self.newStudent.classes()
-        //};
-        ajaxHelper(studentsUri + oldStudent.id, 'PUT', oldStudent).done(function () {
+        ajaxHelper(studentsUri + student.id, 'PUT', student).done(function () {
             alert("Update student success.");
-            $("#UpdateForm").hide();
-            $("#UpdateLB").hide();
-            clearFields();
-            $("#Add").show();
             self.getAllStudentsCheck();
         });
     };
@@ -257,33 +217,8 @@ var ViewModels = function () {
             });
         }
     };
-    // get data to text box when update
-    self.GetDataToTB = function (item) {
-        $("#add").hide();
-        $("#AddST").show();
-        $("#UpdateForm").show();
-        $("#UpdateLB").show();
-        $("#birthDay_UD").show();
-        $("#birthDay").hide();
-        $("#codeview").attr('disable', 'disable');
-        $("#actionUpdate").show();
-        $("#errorCodeView").hide();
-        $("#errorDOB_UD").hide();
-        $("#errorDOB").hide();
-        $("#errorName").hide();
-        $("#errorLoop").hide();
-        $("#actionAdd").hide();
-
-        self.newStudent.id(item.id);
-        self.newStudent.codeView(item.codeView); 
-        self.newStudent.name(item.name); 
-        self.newStudent.address(item.address);
-        self.newStudent.birthDay(item.birthDay);
-        self.newStudent.phoneNumber(item.phoneNumber);
-        self.newStudent.genre(item.genre);
-        self.newStudent.classes(item.classesId);
-
-    };
+   
+    
     // get list class
     self.listClass = ko.observableArray();
     var getAllClass = function () {
@@ -296,85 +231,19 @@ var ViewModels = function () {
     
 };
 
-function checkValidation() {
-    var codeview = document.getElementById("codeview").value;
-    if (codeview.length < 5 ) {
-        document.getElementById("errorCodeView").innerHTML("Please insert codeview with length is 8");
+function checkPhone() {
+    var phone = document.getElementById("Phone").value;
+    if (phone.length > 12) {
+        document.getElementById("errPhone").innerHTML = 'Please insert ....';
     }
     else {
-        document.getElementById("errorCodeView").innerHTML("");
+        document.getElementById("errPhone").innerHTML = '';
     }
-}
+};
 
-//function showorhide() {
-//    $("#allstudent").click(function () {
-//        $("#update").show();
-//        $("#hide").show();
-//        $("#restore").hide();
-//        $("#delete").hide();
-//    });
-//    $("#studentactive").click(function () {
-//        $("#update").show();
-//        $("#hide").show();
-//        $("#restore").hide();
-//        $("#delete").hide();
-//    });
-//    $("#studentdeleted").click(function () {
-//        $("#update").hide();
-//        $("#hide").hide();
-//        $("#restore").show();
-//        $("#delete").show();
-//    });
-//}
 $(document).ready(function () {
-    var viewModel = new ViewModels();
-    viewModel.getAllStudentsCheck();
-    ko.applyBindings(viewModel);
-
-    $("#update").show();
-    $("#hide").show();
-    $("#restore").hide();
-    $("#delete").hide();
-
-    $("#AddST").hide();
-    $("#UpdateLB").hide();
-    $("#UpdateForm").hide();
-    $("#showFormSearch").hide();
+    var VM = new ViewModels();
+    VM.getAllStudentsCheck();
+    ko.applyBindings(VM);
     
-
-    $("#showSearch").click(function () {
-        $("#showFormSearch").toggle();
-    });
-    $("#Add").click(function () {
-        $("#AddST").show();
-        $("#UpdateForm").hide();
-        //$("#errorCodeView").hide();
-        $("#errorLoop").hide();
-        $("#actionUpdate").hide();
-        $("#actionAdd").show();
-        $("#birthDay_UD").hide();
-        $("#birthDay").show();
-        $("#errorDOB").hide();
-        $("#errorDOB_UD").hide();
-        $("#errorName").hide();
-    });
-    $("#actionCancel").click(function () {
-        $("#AddST").hide();
-        console.clear();
-    });
-   
-    $("#actionCancelUD").click(function () {
-        $("#UpdateLB").hide();
-        $("#Add").show();
-        $("#UpdateForm").hide();
-    });
-    $("#searchforname").change(function () {
-        viewModel.searchStudent();
-    });
-    $("#searchforaddress").change(function () {
-        viewModel.searchStudent();
-    });
-    $("#searchforbirthday").change(function () {
-        viewModel.searchStudent();
-    });
 });

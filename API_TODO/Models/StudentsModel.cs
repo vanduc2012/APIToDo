@@ -20,6 +20,8 @@ namespace API_TODO.Models
 
         public DateTime BirthDay { get; set; }
         public string Address { get; set; }
+
+        [MaxLength(11,ErrorMessage ="Phone number only 11 char max.")]
         public string PhoneNumber { get; set; }
         public string Genre { get; set; }
         public bool IsDelete { get; set; }
