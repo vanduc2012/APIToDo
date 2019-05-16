@@ -6,29 +6,70 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
     <script type='text/javascript' src="../Scripts/knockout-3.5.0.js"></script>
-  
+
     <script src="../Scripts/knockout.js"></script>
- 
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
 
 </head>
 <body>
-    <center><h4>Show API with knockoutJs</h4></center>
+    <!--<center><h4>Show API with knockoutJs</h4></center>
     <br />
-    <hr />
-   
+    <hr />-->
+    <nav class="navbar navbar-default" role="navigation" style="top:0px;">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Home</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li id="all" class="nav-item"><a href="" data-bind="click: getAllStudents">All Students</a></li>
+                    <li id="active" class="nav-item active"><a href="" data-bind="click: getAllStudentsCheck">Students active</a></li>
+                    <li id="inactive" class="nav-item "><a href="" data-bind="click: getAllStudentsDeleted">Students Inactive</a></li>
+                </ul>
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button class="btn glyphicon glyphicon-search"></button>
+                </form>
+                <!--<ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Link</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>-->
+            </div><!-- /.navbar-collapse -->
+        </div>
+    </nav>
 
 
     <!-- add new student -->
+
     <div class="container">
-        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#AddNewStudent">
-            <span class="glyphicon glyphicon-plus"></span> Add New Student
-        </button>
+
 
         <div class="modal fade" id="AddNewStudent" tabindex="-1" role="dialog" aria-labelledby="AddNewStudentLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -40,16 +81,18 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="row modal-body">
                         <form>
-                            <div>
-                                <div class="form-group">
+
+                            <div class="col-md-6">
+                                <div class="form-group" hidden="hidden">
                                     <label hidden for="id" class="col-form-label">Id:</label>
                                     <input hidden type="text" class="form-control" id="Id" data-bind="value: newStudent.id">
                                 </div>
                                 <div class="form-group">
                                     <label for="codeview" class="col-form-label">CodeView:</label>
-                                    <input type="text" class="form-control" id="Codeview" data-bind="value: newStudent.codeView">
+                                    <input type="number" class="form-control" id="Codeview" data-bind="value: newStudent.codeView" onkeyup="checkCodeview()">
+                                    <span id="errCodeView" style="color:red;"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="name" class="col-form-label">Name:</label>
@@ -63,10 +106,13 @@
                                     <label for="Birthday" class="col-form-label">Birthday:</label>
                                     <input type="date" class="form-control" id="Birthday" data-bind="value: newStudent.birthDay" />
                                 </div>
+                            </div>
+                            <div class="col-md-6">
+
                                 <div class="form-group">
                                     <label for="Phone" class="col-form-label">Phone:</label>
                                     <input type="number" class="form-control" id="Phone" data-bind="value: newStudent.phoneNumber" onkeyup="checkPhone()" />
-                                    <span id="errPhone"></span>
+                                    <span id="errPhone" style="color:red;"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="Genre" class="col-form-label">Genre:</label>
@@ -78,30 +124,52 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="Class" class="col-form-label">Class:</label>
-                                    <select class="form-control" data-bind="options: listClass , optionsValue: 'id', optionsText: 'name', value: newStudent.classes" id="Class"></select>
+                                    <select class="form-control" data-bind="options: classes , optionsValue: 'id', optionsText: 'name', value: newStudent.classes" id="Class"></select>
+                                </div>
+                                <div id="isDelete" class="form-group" style="display:none">
+                                    <label for="isDelete" class="col-form-label">Display:</label>
+                                    <select class="form-control"  id="isDelete" data-bind="value: newStudent.isDelete">
+                                        <option value="false">True</option>
+                                        <option value="true">False</option>
+                                    </select>
                                 </div>
                             </div>
-                            
                         </form>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="flex: 0px; justify-content: center; text-align: center;">
                         <button type="button" id="btnAdd" class="btn btn-primary" data-bind="click:AddStudent">Submit</button>
                         <button type="button" id="btnUpdate" class="btn btn-success" data-bind="click:updateStudent">Update</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
                     </div>
                 </div>
             </div>
         </div>
         <!-- end Add new student-->
+
     </div>
-    
-    
-    <div class="container">
-        <table style="flex:auto; top:5px;" id="dataTB" class="table table-striped table-bordered table-condensed table-reponsive">
+    <!--<div class="container" style="position:relative; left:5px; float: left">
+        <button type="button" class="btn btn-sm" style="background-color:azure; " value="AllStudents" id="allstudent" data-bind="click: getAllStudents">All Students</button> &nbsp;
+        <button type="button" class="btn btn-sm" style="background-color:azure; " value="StudentsACtive" id="studentactive" data-bind="click: getAllStudentsCheck"> Students active</button> &nbsp;
+        <button type="button" class="btn btn-sm" style="background-color:azure;  " value="StudentsDeleted" id="studentdeleted" data-bind="click: getAllStudentsDeleted"> Students inactive</button>
+
+    </div>-->
+    <hr />
+    <div class="container" style="margin:auto">
+        <div class="flex-column" style="float:right">
+            <button type="button" id="btnAddStudent" class="btn btn-sm btn-primary" data-bind="click: reSet" data-toggle="modal" data-target="#AddNewStudent" onclick="showSubmit()">
+                <span class="glyphicon glyphicon-plus"></span> Add New Student
+            </button>
+            <button type="button" id="deletecheck" class="btn btn-danger btn-sm" data-bind="click: deleteCheckbox">
+                <!--style="display:none"-->
+                <span class="glyphicon glyphicon-trash"> Delete checked</span>
+            </button>
+        </div>
+        <table top:5px;" id="dataTB" class="table table-striped table-bordered table-condensed table-reponsive">
             <thead>
-                <tr style="text-align: center;">
-                    <th hidden>Id</th>
+                <tr>
+                    <th >Id</th>
+                    <th></th>
                     <th>CodeView</th>
                     <th>Name</th>
                     <th>Address</th>
@@ -109,47 +177,44 @@
                     <th>phoneNumber</th>
                     <th>Genre</th>
                     <th>Class</th>
-                    <th style="text-align:center;">Action</th>
+                    <th>Action</th>
                 </tr>
             </thead>
-            <tbody data-bind="foreach: listStudents">
+            <tbody id="mytable" data-bind="foreach: listStudents">
                 <tr>
-                    <td hidden data-bind="text: id"></td>
-                    <td data-bind="text: codeView"></td>
+                    <td id="idST" class="idST" data-bind="text: id"></td>
+                    <td><input type="checkbox" id="check" name="check" onchange="showBtnCheckbox()"  /></td>
+                    <td style="text-align:center" data-bind="text: codeView"></td>
                     <td data-bind="text: name"></td>
                     <td data-bind="text: address"></td>
-                    <td data-bind="text: birthDay"></td>
+                    <td style="text-align:center" data-bind="text: CatChuoiDate1(birthDay)"></td>
                     <td data-bind="text: phoneNumber"></td>
-                    <td data-bind="text: genre"></td>
-                    <td data-bind="text: classesId"></td>
+                    <td style="text-align:center" data-bind="text: genre"></td>
+                    <td data-bind="text: $parent.getClassById(classesId) "></td>
+                    <td data-bind="text: isDelete" hidden id="isdelete"></td>
                     <td class="text-center">
-                        <button type="button" id="update" class="btn btn-primary btn-sm" data-bind="click: $parent.GetDataToTB" data-toggle="modal" data-target="#AddNewStudent">
-                            <span class="glyphicon glyphicon-edit"></span> Edit
+                        <button type="button" id="update" class="btn btn-primary btn-sm updateBT" onclick="showhide()" data-bind="click: $parent.GetDataToTB" data-toggle="modal" data-target="#AddNewStudent">
+                            <span class="glyphicon glyphicon-edit"></span>
                         </button>
-                        <button type="button" id="hide" class="btn btn-warning btn-sm" data-bind="click: $parent.HideStudent" >
-                            <span class="glyphicon glyphicon-eye-close"></span> Hide
+                        <button type="button" id="hide" class="btn btn-warning btn-sm hideBT" data-bind="click: $parent.HideStudent">
+                            <span class="glyphicon glyphicon-eye-close"></span>
                         </button>
-                        <button type="button" id="restore" class="btn btn-success btn-sm"  data-bind="click: $parent.RestoreStudent">
-                            <span class="glyphicon glyphicon-refresh"></span> Restore
+                        <button type="button" id="restore" class="btn btn-success btn-sm restoreBT" data-bind="click: $parent.RestoreStudent">
+                            <span class="glyphicon glyphicon-eye-open"></span>
                         </button>
-                        <button type="button" id="delete" class="btn btn-danger btn-sm" data-bind="click: $parent.DeleteStudent">
-                            <span class="glyphicon glyphicon-trash"></span> Delete
+                        <button type="button" id="delete" class="btn btn-danger btn-sm deleteBT" data-bind="click: $parent.DeleteStudent">
+                            <span class="glyphicon glyphicon-trash"></span>
                         </button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    
+
 
     <br />
 
-    <div class="container" >
-        <button type="button" class="btn btn-sm" style="background-color:azure; " value="AllStudents" id="allstudent" data-bind="click: getAllStudents">All Students</button> &nbsp;
-        <button type="button" class="btn btn-sm" style="background-color:azure; " value="StudentsACtive" id="studentactive" data-bind="click: getAllStudentsCheck"> Students active</button> &nbsp;
-        <button type="button" class="btn btn-sm" style="background-color:azure;  " value="StudentsDeleted" id="studentdeleted" data-bind="click: getAllStudentsDeleted"> Students inactive</button>
 
-    </div>
 
 
     <br />

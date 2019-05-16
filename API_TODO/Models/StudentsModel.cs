@@ -13,7 +13,7 @@ namespace API_TODO.Models
     {
         public int Id { get; set; }
         [Required]
-        [MaxLength(8, ErrorMessage = "Maxlength: 8")]
+        [StringLength(8, ErrorMessage = "length: 8")]
         public string CodeView { get; set; }
         public string Name { get; set; }
         [DataType(DataType.Date)]
@@ -21,7 +21,8 @@ namespace API_TODO.Models
         public DateTime BirthDay { get; set; }
         public string Address { get; set; }
 
-        [MaxLength(11,ErrorMessage ="Phone number only 11 char max.")]
+        [MaxLength(11,ErrorMessage ="Phone number maxlength 11 char max.")]
+        [MinLength(10,ErrorMessage = "Phone number minlength 10 char max.")]
         public string PhoneNumber { get; set; }
         public string Genre { get; set; }
         public bool IsDelete { get; set; }
