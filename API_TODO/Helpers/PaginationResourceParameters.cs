@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API_TODO.Models
+namespace API_TODO.Helpers
 {
-    public class PagingParameterModel
+    public abstract class PaginationResourceParameters
     {
         const int maxPageSize = 20;
         public int PageNumber { get; set; } = 1;
-        public int _PageSize { get; set; } = 5;
+        public int _PageSize { get; set; } = 10;
         public int pageSize
         {
             get { return _PageSize; }

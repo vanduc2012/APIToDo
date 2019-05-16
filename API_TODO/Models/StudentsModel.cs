@@ -22,7 +22,7 @@ namespace API_TODO.Models
         public string Address { get; set; }
 
         [MaxLength(11,ErrorMessage ="Phone number maxlength 11 char max.")]
-        [MinLength(10,ErrorMessage = "Phone number minlength 10 char max.")]
+        
         public string PhoneNumber { get; set; }
         public string Genre { get; set; }
         public bool IsDelete { get; set; }

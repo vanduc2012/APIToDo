@@ -30,6 +30,7 @@ var ViewModels = function () {
             data: data ? JSON.stringify(data) : null
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.error(errorThrown);
+            alert("Something went wrong.");
         });
     }
 
@@ -41,19 +42,19 @@ var ViewModels = function () {
     //get list all students
     self.getAllStudents = function () {
         flag = "all";
-        ajaxHelper(studentsUri + "?all=2", 'GET').done(function (data) {
+        ajaxHelper(studentsUri + "?all=2&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET').done(function (data) {
             self.listStudents(data);
             $(".hideBT").remove();
             $(".restoreBT").remove();
 
         });
-        
+
     };
 
     //get list student active
     self.getAllStudentsCheck = function () {
         flag = "active";
-        ajaxHelper(studentsUri + "?all=1&isDelete=false", 'GET')
+        ajaxHelper(studentsUri + "?all=1&isDelete=false&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET')
             .done(function (data) {
 
                 self.listStudents(data);
@@ -65,8 +66,7 @@ var ViewModels = function () {
     //self.getAllStudentsCheck();
     self.getAllStudentsDeleted = function () {
         flag = "removed";
-        ajaxHelper(studentsUri + "?all=1&isDelete=true"
-            , 'GET')
+        ajaxHelper(studentsUri + "?all=1&isDelete=true&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET')
             .done(function (data) {
 
                 self.listStudents(data);
@@ -80,19 +80,19 @@ var ViewModels = function () {
     //seacr for removed
     self.searchStudent = function () {
         if (flag === "all") {
-            ajaxHelper(studentsUri + "?all=2", 'GET').done(function (data) {
+            ajaxHelper(studentsUri + "?all=2&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET').done(function (data) {
                 self.listStudents(data);
             });
         }
         else {
             if (flag === "active") {
-                ajaxHelper(studentsUri + "?all=11&isDelete=false", 'GET').done(function (data) {
+                ajaxHelper(studentsUri + "?all=1&isDelete=false&name=" + $("#searchingAll").val() +"&address=" + $("#searchingAll").val(), 'GET').done(function (data) {
 
                     self.listStudents(data);
                 });
             }
             else {
-                ajaxHelper(studentsUri + "?all=1&isDelete=true", 'GET')
+                ajaxHelper(studentsUri + "?all=1&isDelete=true&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET')
                     .done(function (data) {
 
                         self.listStudents(data);
@@ -103,6 +103,10 @@ var ViewModels = function () {
     };
 
 
+    $("#searchingAll").on("keyup", function () {
+        self.searchStudent();
+    });
+    
     self.newStudent = {
         id: ko.observable(),
         codeView: ko.observable(),
@@ -192,6 +196,7 @@ var ViewModels = function () {
             id: item.id,
             codeView: item.codeView,
             address: item.address,
+            birthDay: item.birthDay,
             phoneNumber: item.phoneNumber,
             genre: item.genre,
             name: item.name,
@@ -201,9 +206,12 @@ var ViewModels = function () {
         var rs = confirm("Are you sure?");
 
         if (rs === true) {
-            ajaxHelper(studentsUri + item.id, 'PATCH', student).done(function () {
+            console.log(student.isDelete);
+            ajaxHelper(studentsUri + item.id, 'PUT', student).done(function () {
                 alert("Success");
                 self.getAllStudentsDeleted();
+            }).fail(function () {
+                alert("Something went wrong.");
             });
         }
 
@@ -253,36 +261,33 @@ var ViewModels = function () {
     getAllClass();
     self.Classname = ko.observable();
     self.getClassById = function (idCL) {
+
         ajaxHelper(classUri + idCL, 'GET').done(function (data) {
+
+            alert(data.name);
             return data.name;
         });
     };
     //self.getClassById();
 
-    self.deleteCheckbox = function (item) {
-        var checkboxes = document.getElementsByName('check');
-        //var table = $("#mytable").DataTable();
-        //// Lặp và thiết lập checked
-        //var rs = confirm("Are you sure?");
-        //if (rs) {
+    self.deleteCheckbox = function () {
+        var rs = confirm("are you sure?");
+        if (rs) {
+            $("#mytable input[type=checkbox]:checked").each(function () {
+                var row = $(this).closest("tr")[0];
+                console.log(row);
+                var message = row.cells[0];
+                console.log(message);
+                var stId = $(message).html();
+                ajaxHelper(studentsUri + stId, 'DELETE').done(function () {
 
-        //    var rowData = table.rows({ selected: true }).data()[0];
-
-        //    alert(rowData);
-        //}
-
-
-        $("#mytable input[type=checkbox]:checked").each(function () {
-            var row = $(this).closest("tr")[0];
-            var message = row.cells[0];
-            var data = $(this).text();
-            console.log(message);
-            console.log(data);
-        });
-
-    }
-}
-
+                });
+            });
+            alert("Success");
+            self.getAllStudentsCheck();
+        }
+    };
+};
 
 
 
@@ -293,6 +298,7 @@ function showhide() {
     $("#UpdateStudentLabel").show();
     $("#btnAdd").hide();
     $("#btnUpdate").show();
+    document.getElementById('isDelete').style.display = "inline-block";
     
 }
 function showSubmit() {
@@ -305,21 +311,68 @@ function showSubmit() {
 }
 
 function showBtnCheckbox() {
+    var checkallcheckbox = document.getElementById('checkall');
+   
+    if (!showcheck()) {
+        document.getElementById("deletecheck").style.display = "none";
+        checkallcheckbox.checked = false;
+    }
+    else {
+        document.getElementById("deletecheck").style.display = "inline-block";
+        checkallcheckbox.checked = true;
+    }
+}
+function showcheck() {
     var checkboxes = document.getElementsByName('check');
     for (var i = 0; i < checkboxes.length; i++) {
-        if (!checkboxes[i].checked) {
-            //console.log(checkboxes[i].checked);
-            document.getElementById("deletecheck").style.display = "none";
+        if (checkboxes[i].checked) {
+            return true;
         }
         else {
-            document.getElementById("deletecheck").style.display = "inline-block";
-            return true;
+            return false;
         }
     }
     return false;
 }
 
+//check all checkbox
+function CheckAll() {
+    var checkall = document.getElementById('checkall');
+    var checkboxs = document.getElementsByName('check');
+   
+    if (checkall.checked) {
+        for (var i = 0; i < checkboxs.length; i++) {
+            checkboxs[i].checked = true;
+            document.getElementById("deletecheck").style.display = "inline-block";
+        }
+    }
+    else {
+        for (var j = 0; j < checkboxs.length; j++) {
+            checkboxs[j].checked = false;
+            document.getElementById("deletecheck").style.display = "none";
+        }
+    }
+    
+}
 
+function FormatName() {
+    var space = " ";
+    var start = 0;
+    var end = 0;
+    var Name = $("#Name").val();
+    console.log(Name);
+    for (var i = 0; i < Name.length; i++) {
+        end = Name.indexOf(space);
+        console.log(end);
+        
+        var Fm = Name.substring(start, end);
+        console.log(Fm);
+        start = end;
+    }
+    
+    
+}
+//validate phone
 function checkPhone() {
     var phone = document.getElementById("Phone").value;
     if (phone.length > 11) {
@@ -334,6 +387,7 @@ function checkPhone() {
             document.getElementById("errPhone").innerHTML = 'OK';
     }
 };
+//validate codeview
 function checkCodeview() {
     var CodeView = document.getElementById("Codeview").value;
     if (CodeView.length !== 8) {
@@ -396,7 +450,6 @@ $(document).ready(function () {
         $('li.nav-item').removeClass('active');
         $(this).addClass('active');
     });
-
-    
+   
 });
 
