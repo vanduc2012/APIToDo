@@ -25,7 +25,7 @@ namespace API_TODO.Controllers
         [HttpGet]
         
         public async Task<ActionResult<IEnumerable<StudentsModel>>> GetStudentsModel(
-            bool isDelete, int all, string name, string address, string birthDay)
+            bool isDelete, int all, string name, string address, string codeView, string birthDay)
         {
 
 
@@ -36,13 +36,14 @@ namespace API_TODO.Controllers
                 if (!String.IsNullOrEmpty(name) || !String.IsNullOrEmpty(address))
                 {
                    
-                    return await _context.StudentsModel.Where(
+                    return await _context.StudentsModel.Include("Classes").Where(
                         x => x.Name.Contains(name)||
-                        x.Address.Contains(address))
+                        x.Address.Contains(address) ||
+                        x.CodeView.Contains(codeView))
                     .Where(x=>x.IsDelete == isDelete).OrderBy(x => x.Name)
                        .ToListAsync();
                 }
-                return await _context.StudentsModel.Where(x => x.IsDelete == isDelete).OrderBy(x => x.Name)
+                return await _context.StudentsModel.Include("Classes").Where(x => x.IsDelete == isDelete).OrderBy(x => x.Name)
                        .ToListAsync();
             }
             else
@@ -52,13 +53,14 @@ namespace API_TODO.Controllers
                     if (!String.IsNullOrEmpty(name)|| !String.IsNullOrEmpty(address))
                     {
                         return await _context.StudentsModel.Where(x => x.Name.Contains(name)||
-                        x.Address.Contains(address)).ToListAsync();
+                        x.Address.Contains(address) ||
+                        x.CodeView.Contains(codeView)).ToListAsync();
                     }
-                    return await _context.StudentsModel.ToListAsync();
+                    return await _context.StudentsModel.Include("Classes").OrderBy(x => x.Name).ToListAsync();
                 }
-                return await _context.StudentsModel.OrderBy(x => x.Name).ToListAsync();
+               
             }
-            
+            return await _context.StudentsModel.Include("Classes").OrderBy(x => x.Name).ToListAsync();
 
             //if (all == 1) // search for active or remove
             //{
@@ -259,10 +261,18 @@ namespace API_TODO.Controllers
         [HttpPost]
         public async Task<ActionResult<StudentsModel>> PostStudentsModel(StudentsModel studentsModel)
         {
-            _context.StudentsModel.Add(studentsModel);
-            await _context.SaveChangesAsync();
+            if (StudentCodeViewExist(studentsModel.CodeView)) {
+                return NotFound();
+            }
+            else
+            {
+                _context.StudentsModel.Add(studentsModel);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetStudentsModel", new { id = studentsModel.Id }, studentsModel);
+            }
+            
 
-            return CreatedAtAction("GetStudentsModel", new { id = studentsModel.Id }, studentsModel);
+            
         }
 
         // DELETE: api/Students/5
@@ -284,6 +294,10 @@ namespace API_TODO.Controllers
         private bool StudentsModelExists(int id)
         {
             return _context.StudentsModel.Any(e => e.Id == id);
+        }
+        private bool StudentCodeViewExist(string codeView)
+        {
+            return _context.StudentsModel.Any(x => x.CodeView.Contains(codeView));
         }
     }
 }

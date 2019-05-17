@@ -30,7 +30,7 @@ var ViewModels = function () {
             data: data ? JSON.stringify(data) : null
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.error(errorThrown);
-            alert("Something went wrong.");
+            
         });
     }
 
@@ -42,7 +42,9 @@ var ViewModels = function () {
     //get list all students
     self.getAllStudents = function () {
         flag = "all";
-        ajaxHelper(studentsUri + "?all=2&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET').done(function (data) {
+        ajaxHelper(studentsUri + "?all=2&name=" + $("#searchingAll").val()
+            + "&address=" + $("#searchingAll").val()
+            + "&codeView=" + $("#searchingAll").val(), 'GET').done(function (data) {
             self.listStudents(data);
             $(".hideBT").remove();
             $(".restoreBT").remove();
@@ -54,11 +56,14 @@ var ViewModels = function () {
     //get list student active
     self.getAllStudentsCheck = function () {
         flag = "active";
-        ajaxHelper(studentsUri + "?all=1&isDelete=false&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET')
+        ajaxHelper(studentsUri + "?all=1&isDelete=false&name=" + $("#searchingAll").val()
+            + "&address=" + $("#searchingAll").val()
+            + "&codeView=" + $("#searchingAll").val(), 'GET')
             .done(function (data) {
 
                 self.listStudents(data);
                 $(".restoreBT").remove();
+                
             });
 
     };
@@ -66,7 +71,9 @@ var ViewModels = function () {
     //self.getAllStudentsCheck();
     self.getAllStudentsDeleted = function () {
         flag = "removed";
-        ajaxHelper(studentsUri + "?all=1&isDelete=true&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET')
+        ajaxHelper(studentsUri + "?all=1&isDelete=true&name=" + $("#searchingAll").val()
+            + "&address=" + $("#searchingAll").val()
+            + "&codeView=" + $("#searchingAll").val(), 'GET')
             .done(function (data) {
 
                 self.listStudents(data);
@@ -80,19 +87,25 @@ var ViewModels = function () {
     //seacr for removed
     self.searchStudent = function () {
         if (flag === "all") {
-            ajaxHelper(studentsUri + "?all=2&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET').done(function (data) {
+            ajaxHelper(studentsUri + "?all=2&name=" + $("#searchingAll").val()
+                + "&address=" + $("#searchingAll").val()
+                + "&codeView=" + $("#searchingAll").val(), 'GET').done(function (data) {
                 self.listStudents(data);
             });
         }
         else {
             if (flag === "active") {
-                ajaxHelper(studentsUri + "?all=1&isDelete=false&name=" + $("#searchingAll").val() +"&address=" + $("#searchingAll").val(), 'GET').done(function (data) {
+                ajaxHelper(studentsUri + "?all=1&isDelete=false&name=" + $("#searchingAll").val()
+                    + "&address=" + $("#searchingAll").val()
+                    + "&codeView=" + $("#searchingAll").val(), 'GET').done(function (data) {
 
                     self.listStudents(data);
                 });
             }
             else {
-                ajaxHelper(studentsUri + "?all=1&isDelete=true&name=" + $("#searchingAll").val() + "&address=" + $("#searchingAll").val(), 'GET')
+                ajaxHelper(studentsUri + "?all=1&isDelete=true&name=" + $("#searchingAll").val()
+                    + "&address=" + $("#searchingAll").val()
+                    + "&codeView=" + $("#searchingAll").val(), 'GET')
                     .done(function (data) {
 
                         self.listStudents(data);
@@ -127,9 +140,9 @@ var ViewModels = function () {
         self.newStudent.name('');
         self.newStudent.address('');
         self.newStudent.birthDay(new Date());
-        self.newStudent.phone = "";
-        self.newStudent.genre("Nam");
-        self.newStudent.classes(1);
+        self.newStudent.phoneNumber('');
+        self.newStudent.genre('');
+        self.newStudent.classes('');
         document.getElementById("errPhone").innerHTML = "";
         document.getElementById("errCodeView").innerHTML = "";
     };
@@ -210,9 +223,10 @@ var ViewModels = function () {
             ajaxHelper(studentsUri + item.id, 'PUT', student).done(function () {
                 alert("Success");
                 self.getAllStudentsDeleted();
-            }).fail(function () {
-                alert("Something went wrong.");
             });
+                //.fail(function () {
+            //    alert("Something went wrong.");
+            //});
         }
 
     };
@@ -259,17 +273,8 @@ var ViewModels = function () {
 
 
     getAllClass();
-    self.Classname = ko.observable();
-    self.getClassById = function (idCL) {
 
-        ajaxHelper(classUri + idCL, 'GET').done(function (data) {
-
-            alert(data.name);
-            return data.name;
-        });
-    };
-    //self.getClassById();
-
+    // delete with checkbox is checked
     self.deleteCheckbox = function () {
         var rs = confirm("are you sure?");
         if (rs) {
@@ -290,7 +295,7 @@ var ViewModels = function () {
 };
 
 
-
+// show form to update
 function showhide() {
 
     $("#Codeview").attr("disabled", 'disabled');
@@ -299,8 +304,11 @@ function showhide() {
     $("#btnAdd").hide();
     $("#btnUpdate").show();
     document.getElementById('isDelete').style.display = "inline-block";
+    $("#errCodeView").hide();
     
 }
+
+//show form to insert
 function showSubmit() {
     $("#Codeview").removeAttr("disabled", "disabled");
     $("#AddNewStudentLabel").show();
@@ -308,29 +316,32 @@ function showSubmit() {
     $("#btnAdd").show();
     $("#btnUpdate").hide();
     document.getElementById("isDelete").style.display = "none";
+    $("#errCodeView").show();
 }
 
+
+// show button multi delete
 function showBtnCheckbox() {
     var checkallcheckbox = document.getElementById('checkall');
-   
+    var checkboxes = document.getElementsByName('check');
     if (!showcheck()) {
         document.getElementById("deletecheck").style.display = "none";
-        checkallcheckbox.checked = false;
+        checkallcheckbox.checked = true;
     }
     else {
         document.getElementById("deletecheck").style.display = "inline-block";
-        checkallcheckbox.checked = true;
+        checkallcheckbox.checked = false;
     }
 }
+
+// check checkbox is checked or not
 function showcheck() {
     var checkboxes = document.getElementsByName('check');
     for (var i = 0; i < checkboxes.length; i++) {
         if (checkboxes[i].checked) {
             return true;
         }
-        else {
-            return false;
-        }
+        
     }
     return false;
 }
@@ -355,6 +366,8 @@ function CheckAll() {
     
 }
 
+
+
 function FormatName() {
     var space = " ";
     var start = 0;
@@ -376,27 +389,55 @@ function FormatName() {
 function checkPhone() {
     var phone = document.getElementById("Phone").value;
     if (phone.length > 11) {
-        document.getElementById("errPhone").innerHTML = 'Maxlength is 11 char.';
+        document.getElementById("errPhone").innerHTML = 'Maxlength is 11 number.';
     }
 
     else {
         if (phone.length < 10) {
-            document.getElementById("errPhone").innerHTML = 'Minlength is 10 char.';
+            document.getElementById("errPhone").innerHTML = 'Minlength is 10 number.';
         }
         else
             document.getElementById("errPhone").innerHTML = 'OK';
     }
 };
 //validate codeview
+
+function checkCodeV() {
+
+    var codeview = document.getElementById("Codeview").value;
+    var table = document.getElementById('mytable');
+
+
+    for (var r = 0, n = table.rows.length; r < n; r++) {
+        //console.log($(table.rows[0].cells[1]).html());
+        if (codeview === $(table.rows[r].cells[1]).html()) {
+            return true;
+        }
+       
+    }
+    return false;
+}
+
+
 function checkCodeview() {
     var CodeView = document.getElementById("Codeview").value;
-    if (CodeView.length !== 8) {
-        document.getElementById("errCodeView").innerHTML = 'Codeview with length is 8 char.';
-    }
-    else {
+    if (CodeView.length === 8 && !checkCodeV()) {
         document.getElementById("errCodeView").innerHTML = 'OK';
     }
+    else {
+        if (checkCodeV) {
+            document.getElementById("errCodeView").innerHTML = 'Codeview is existing.';
+        }
+        if (CodeView.length !== 8) {
+            document.getElementById("errCodeView").innerHTML = 'Codeview with length is 8 number.';
+        }
+    }
+    
 };
+
+function checkButtonSM() {
+
+}
 
 function CatChuoiDate(da) {
     var date = new Date(da);
