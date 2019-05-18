@@ -33,34 +33,36 @@ namespace API_TODO.Controllers
 
             if (all == 1) // show for active
             {
-                if (!String.IsNullOrEmpty(name) || !String.IsNullOrEmpty(address))
+                if (!String.IsNullOrEmpty(name) || !String.IsNullOrEmpty(address)
+                    || !String.IsNullOrEmpty(codeView))
                 {
                    
                     return await _context.StudentsModel.Include("Classes").Where(
                         x => x.Name.Contains(name)||
                         x.Address.Contains(address) ||
                         x.CodeView.Contains(codeView))
-                    .Where(x=>x.IsDelete == isDelete).OrderBy(x => x.Name)
+                    .Where(x=>x.IsDelete == isDelete).Where(x=>x.Classes.IsDelete == false).OrderBy(x => x.Name)
                        .ToListAsync();
                 }
-                return await _context.StudentsModel.Include("Classes").Where(x => x.IsDelete == isDelete).OrderBy(x => x.Name)
+                return await _context.StudentsModel.Include("Classes").Where(x => x.IsDelete == isDelete).Where(x => x.Classes.IsDelete == false).OrderBy(x => x.Name)
                        .ToListAsync();
             }
             else
             {
                 if (all == 2) // show for all
                 {
-                    if (!String.IsNullOrEmpty(name)|| !String.IsNullOrEmpty(address))
+                    if (!String.IsNullOrEmpty(name)|| !String.IsNullOrEmpty(address)
+                        || !String.IsNullOrEmpty(codeView))
                     {
                         return await _context.StudentsModel.Where(x => x.Name.Contains(name)||
                         x.Address.Contains(address) ||
-                        x.CodeView.Contains(codeView)).ToListAsync();
+                        x.CodeView.Contains(codeView)).Include("Classes").Where(x => x.Classes.IsDelete == false).OrderBy(x => x.Name).ToListAsync();
                     }
-                    return await _context.StudentsModel.Include("Classes").OrderBy(x => x.Name).ToListAsync();
+                    return await _context.StudentsModel.Include("Classes").Where(x => x.Classes.IsDelete == false).OrderBy(x => x.Name).ToListAsync();
                 }
                
             }
-            return await _context.StudentsModel.Include("Classes").OrderBy(x => x.Name).ToListAsync();
+            return await _context.StudentsModel.Include("Classes").Where(x => x.Classes.IsDelete == false).OrderBy(x => x.Name).ToListAsync();
 
             //if (all == 1) // search for active or remove
             //{

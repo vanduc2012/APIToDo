@@ -22,9 +22,28 @@ namespace API_TODO.Controllers
 
         // GET: api/Classes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ClassModel>>> GetClassModel()
+        public async Task<ActionResult<IEnumerable<ClassModel>>> GetClassModel(int all, bool isDelete, string name, string codeView)
         {
-            return await _context.ClassModel.Where(x=>x.IsDelete == false).ToListAsync();
+            if (all == 1) // active
+            {
+                if(!String.IsNullOrEmpty(name) || !String.IsNullOrEmpty(codeView))
+                {
+                    return await _context.ClassModel.Where(x => x.Name.Contains(name) || x.CodeView.Contains(codeView))
+                        .Where(x => x.IsDelete == isDelete).OrderBy(x => x.Name)
+                        .ToListAsync();
+                }
+                return await _context.ClassModel.Where(x => x.IsDelete == isDelete).ToListAsync();
+            }
+            if(all == 2) // all
+            {
+                if (!String.IsNullOrEmpty(name) || !String.IsNullOrEmpty(codeView))
+                {
+                    return await _context.ClassModel.Where(x => x.Name.Contains(name) || x.CodeView.Contains(codeView))
+                        .OrderBy(x => x.Name)
+                        .ToListAsync();
+                }
+            }
+            return await _context.ClassModel.ToListAsync();
         }
 
         // GET: api/Classes/5
