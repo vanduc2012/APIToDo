@@ -15,4 +15,10 @@ using API_TODO.Models;
         public DbSet<API_TODO.Models.StudentsModel> StudentsModel { get; set; }
 
         public DbSet<API_TODO.Models.ClassModel> ClassModel { get; set; }
+
+        public DbSet<API_TODO.Models.Authority> Authority { get; set; }
+
+        public DbSet<API_TODO.Models.Faculty> Faculty { get; set; }
+
+        public DbSet<API_TODO.Models.Users> Users { get; set; }
     }
